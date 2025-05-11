@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=3 uid="uid://dsd1rafh33ei8"]
+
+[ext_resource type="Script" uid="uid://caxg5liixr3bo" path="res://Scripts/Data/MapData.gd" id="1_iukft"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Map Container" type="Node3D" parent="."]
+script = ExtResource("1_iukft")
+
+[node name="Terrain" type="GridMap" parent="Map Container"]
+
+[node name="Lichen" type="GridMap" parent="Map Container"]
+
+[node name="Moss" type="GridMap" parent="Map Container"]
+
+[node name="Small Plants1" type="GridMap" parent="Map Container"]
+
+[node name="Small Plants2" type="GridMap" parent="Map Container"]
+
+[node name="Small Plants3" type="GridMap" parent="Map Container"]
+
+[node name="Small Plants4" type="GridMap" parent="Map Container"]
+
+[node name="Med Plants1" type="GridMap" parent="Map Container"]
+
+[node name="Med Plants2" type="GridMap" parent="Map Container"]
+
+[node name="Trees" type="GridMap" parent="Map Container"]
