@@ -1,10 +1,25 @@
-[gd_scene load_steps=2 format=3 uid="uid://dsd1rafh33ei8"]
+[gd_scene load_steps=6 format=3 uid="uid://dsd1rafh33ei8"]
 
 [ext_resource type="Script" uid="uid://caxg5liixr3bo" path="res://Scripts/Data/MapData.gd" id="1_iukft"]
+[ext_resource type="Script" uid="uid://cq6t8tljjui5u" path="res://Scripts/Control/PlayerCameraControl.gd" id="2_gl6un"]
+
+[sub_resource type="Gradient" id="Gradient_iukft"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_gl6un"]
+seed = 8
+frequency = 0.0888
+fractal_octaves = 3
+fractal_weighted_strength = 0.5
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_j5yw3"]
+width = 128
+height = 128
+color_ramp = SubResource("Gradient_iukft")
+noise = SubResource("FastNoiseLite_gl6un")
 
 [node name="Node3D" type="Node3D"]
 
-[node name="Map Container" type="Node3D" parent="."]
+[node name="Map Container" type="Node3D" parent="." groups=["MapData"]]
 script = ExtResource("1_iukft")
 
 [node name="Terrain" type="GridMap" parent="Map Container"]
@@ -26,3 +41,11 @@ script = ExtResource("1_iukft")
 [node name="Med Plants2" type="GridMap" parent="Map Container"]
 
 [node name="Trees" type="GridMap" parent="Map Container"]
+
+[node name="Sprite3D" type="Sprite3D" parent="Map Container"]
+transform = Transform3D(1, 0, 0, 0, 0.267608, -0.963528, 0, 0.963528, 0.267608, 0, 0, 0)
+texture = SubResource("NoiseTexture2D_j5yw3")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.0405155, 0.999179, 0, -0.999179, -0.0405155, 0, 0.636691, 0)
+script = ExtResource("2_gl6un")
