@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://dsd1rafh33ei8"]
+[gd_scene load_steps=7 format=3 uid="uid://dsd1rafh33ei8"]
 
 [ext_resource type="Script" uid="uid://caxg5liixr3bo" path="res://Scripts/Data/MapData.gd" id="1_iukft"]
 [ext_resource type="Script" uid="uid://cq6t8tljjui5u" path="res://Scripts/Control/PlayerCameraControl.gd" id="2_gl6un"]
+[ext_resource type="MeshLibrary" uid="uid://cxbbgd3dnmdhx" path="res://Models/new_mesh_library.tres" id="2_j5yw3"]
 
 [sub_resource type="Gradient" id="Gradient_iukft"]
 
@@ -19,7 +20,7 @@ noise = SubResource("FastNoiseLite_gl6un")
 
 [node name="Node3D" type="Node3D"]
 
-[node name="Map Container" type="Node3D" parent="." groups=["MapData"]]
+[node name="Map Container" type="Node3D" parent="." groups=["MapData2"]]
 script = ExtResource("1_iukft")
 
 [node name="Terrain" type="GridMap" parent="Map Container"]
@@ -41,11 +42,19 @@ script = ExtResource("1_iukft")
 [node name="Med Plants2" type="GridMap" parent="Map Container"]
 
 [node name="Trees" type="GridMap" parent="Map Container"]
+mesh_library = ExtResource("2_j5yw3")
+metadata/_editor_floor_ = Vector3(0, 0, 0)
 
 [node name="Sprite3D" type="Sprite3D" parent="Map Container"]
-transform = Transform3D(1, 0, 0, 0, 0.267608, -0.963528, 0, 0.963528, 0.267608, 0, 0, 0)
+transform = Transform3D(100, 0, 0, 0, -4.37114e-06, -100, 0, 100, -4.37114e-06, 0, 0, 0)
 texture = SubResource("NoiseTexture2D_j5yw3")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -0.0405155, 0.999179, 0, -0.999179, -0.0405155, 0, 0.636691, 0)
+transform = Transform3D(1, 0, 0, 0, 0.907051, 0.42102, 0, -0.42102, 0.907051, -0.0858507, 40.8076, 128.317)
 script = ExtResource("2_gl6un")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.404743, 0.914431, 0, -0.914431, 0.404743, 0, 19.5711, 11.8584)
+light_color = Color(0.239216, 0.607843, 0.32549, 1)
+light_energy = 1.323
+light_indirect_energy = 0.0
