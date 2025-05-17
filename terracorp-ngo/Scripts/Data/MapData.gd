@@ -4,8 +4,10 @@ var Mapsize: Vector2i = Vector2i(128,128)
 var Maps: Array[GridMap]
 var Tiles: Array[Tile]
 var heightNoise = NoiseTexture2D.new()
+
+
 func _ready() -> void:
-	add_to_group("MapData2")
+	add_to_group("MapData")
 	InitResourcePerlinMap()
 	InitMaps()
 	InitTiles()
@@ -41,14 +43,16 @@ func AddPlant(position3D):
 	print(pos)
 	var testTree = Node3D.new()
 	testTree.set_script(load("res://Scripts/Characters/Trees/TestTree.gd"))
-	$Trees.set_cell_item(Vector3i(pos.x,0,pos.z),0,0)
-	Tiles[(pos.x * Mapsize.x) + pos.z].plants[7] = testTree
-
+	Maps[6].set_cell_item(Vector3i(pos.x,0,pos.z),0,0)
+	Tiles[(pos.x * Mapsize.x) + pos.z].plants[4] = testTree
+	Tiles[(pos.x * Mapsize.x) + pos.z].plants[4].Ready()
+	Tiles[(pos.x * Mapsize.x) + pos.z].plants[4].growthAmount = 50
 func PosInMapBounds(pos):
 	if pos.x > Mapsize.x-1 or pos.y > Mapsize.y-1 or pos.x < 0 or pos.y < 0:
 		return false
 	else:
 		return true
+		
 func UpdateMap():
 	for i in 128:
 		Tiles[count + i].UpdateTile()
@@ -81,7 +85,7 @@ func InitTiles():
 				nutrientsToAdd.SoilNutrients.append(Vector2(nutrientTypes, heightNoise.noise.get_noise_2d(x + (nutrientTypes + 1 * Mapsize.x),y + (nutrientTypes + 1 * Mapsize.y)))) #change to perlin
 			tileToAdd.nutrients = nutrientsToAdd
 			tileToAdd.tilePosition = Vector2i(x,y)
-			tileToAdd.mapRef = get_tree().get_first_node_in_group("MapData2")
+			tileToAdd.mapRef = get_tree().get_first_node_in_group("MapData")
 			tileToAdd._ready()
 			Tiles.append(tileToAdd)
 

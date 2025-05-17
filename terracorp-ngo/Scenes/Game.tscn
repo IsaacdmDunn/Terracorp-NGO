@@ -1,8 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://dsd1rafh33ei8"]
+[gd_scene load_steps=11 format=3 uid="uid://dsd1rafh33ei8"]
 
 [ext_resource type="Script" uid="uid://caxg5liixr3bo" path="res://Scripts/Data/MapData.gd" id="1_iukft"]
+[ext_resource type="MeshLibrary" uid="uid://c38upr3r3g3c" path="res://Models/smallPlants.tres" id="2_b2bpf"]
 [ext_resource type="Script" uid="uid://cq6t8tljjui5u" path="res://Scripts/Control/PlayerCameraControl.gd" id="2_gl6un"]
 [ext_resource type="MeshLibrary" uid="uid://cxbbgd3dnmdhx" path="res://Models/new_mesh_library.tres" id="2_j5yw3"]
+[ext_resource type="MeshLibrary" uid="uid://b3xghgixg6b7j" path="res://Models/medianPlants.tres" id="3_7lihs"]
 
 [sub_resource type="Gradient" id="Gradient_iukft"]
 
@@ -35,16 +37,22 @@ script = ExtResource("1_iukft")
 [node name="Moss" type="GridMap" parent="Map Container"]
 
 [node name="Small Plants1" type="GridMap" parent="Map Container"]
+mesh_library = ExtResource("2_b2bpf")
 
 [node name="Small Plants2" type="GridMap" parent="Map Container"]
+mesh_library = ExtResource("2_b2bpf")
 
 [node name="Small Plants3" type="GridMap" parent="Map Container"]
+mesh_library = ExtResource("2_b2bpf")
 
 [node name="Small Plants4" type="GridMap" parent="Map Container"]
+mesh_library = ExtResource("2_b2bpf")
 
 [node name="Med Plants1" type="GridMap" parent="Map Container"]
+mesh_library = ExtResource("3_7lihs")
 
 [node name="Med Plants2" type="GridMap" parent="Map Container"]
+mesh_library = ExtResource("3_7lihs")
 
 [node name="Trees" type="GridMap" parent="Map Container"]
 mesh_library = ExtResource("2_j5yw3")

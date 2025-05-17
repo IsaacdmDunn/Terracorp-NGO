@@ -16,9 +16,45 @@ func _ready() -> void:
 		plants.append(null)
 
 func UpdateTile():
+	for p in plants.size():
+		if plants[p] != null:
+			
+			if plants[p].fertileAllowed == true: 
+				SpreadPlant()
+			plants[p].Update()
+			UpdatePlant(p)
+			
+	
+
+#adds plant to layer on tile
+func AddPlant(plantLayer: int, plant:Plant):
+	plants[plantLayer] = plant
+	plants[plantLayer].Ready()
+	
+#updates plant
+func UpdatePlant(plantID):
+	#grow from small plant to med
+	if plants[plantID].plantType == plants[plantID].PlantType.MedianPlant:
+		if plants[6] == null:
+			plants[6] = plants[plantID]
+			mapRef.get_child(3).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
+			mapRef.get_child(6).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),0,0)
+			KillPlant(plants[plantID], plantID)
+	#grow med plant to large
+	elif plants[plantID].plantType == plants[plantID].PlantType.TreePlant:
+		if plants[7] == null:
+			plants[7] = plants[plantID]
+			mapRef.get_child(6).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
+			mapRef.get_child(9).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),0,0)
+			KillPlant(plants[plantID], plantID)
+	elif plants[plantID].health < 0:
+		KillPlant(plants[plantID],plantID)
+
+#spreads plant when fertile
+func SpreadPlant(): 
 	if tilePosition.y < mapRef.Mapsize.y-1 and tilePosition.x < mapRef.Mapsize.x-1 and tilePosition.x > -1 and tilePosition.y > -1: 
 		for i in plants.size():
-			if randi_range(1,1) == 1 and plants[i] != null: #if ready to grow and tile has plant
+			if randi_range(1,8) == 1 and plants[i] != null: #if ready to grow and tile has plant
 				#spread to adj
 				var rNum = randi_range(0,3) 
 				if rNum == 0:
@@ -29,13 +65,15 @@ func UpdateTile():
 					SpreadPlantToAdjTile(Vector2i(-1,0), i)
 				if rNum == 3:
 					SpreadPlantToAdjTile(Vector2i(0,-1), i)
-
-#adds plant to layer on tile
-func AddPlant(plantLayer: int, plant:Plant):
-	plants[plantLayer] = plant
-
+	
 #sets plant to adj tile
 func SpreadPlantToAdjTile(posOffset: Vector2i, plantLayer: int):
 	var pos = (tilePosition.x * mapRef.Mapsize.x) + (tilePosition.y)
 	mapRef.Tiles[pos + (posOffset.x * mapRef.Mapsize.x) + posOffset.y].AddPlant(plantLayer, plants[plantLayer])
-	mapRef.get_child(9).set_cell_item(Vector3i(tilePosition.x + posOffset.x,0,tilePosition.y + posOffset.y),0,0)
+	mapRef.get_child(3).set_cell_item(Vector3i(tilePosition.x + posOffset.x,0,tilePosition.y + posOffset.y),0,0)
+	
+#kills plant
+func KillPlant(plant, plantLayer:int): 
+	plant = null
+	mapRef.get_child(plantLayer - 2).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
+	plants[plantLayer] = null
