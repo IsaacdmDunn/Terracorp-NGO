@@ -9,31 +9,50 @@ func _ready() -> void:
 	InitResourcePerlinMap()
 	InitMaps()
 	InitTiles()
-	var testTree = Node3D.new()
-	testTree.set_script(load("res://Scripts/Characters/Trees/TestTree.gd"))
 	
-	Tiles[2304].plants.append(testTree)
-	#$Trees.set_cell_item(Vector3i(1,0,1),0,0)
-	print(Tiles[2304].plants[0])
 	
 func _process(delta: float) -> void:
-	var dropPlane  = Plane(Vector3(0, 1, 0), 5)
-	var position3D = dropPlane.intersects_ray(
-							 $"../Camera3D".project_ray_origin(get_viewport().get_mouse_position()),
-							 $"../Camera3D".project_ray_normal(get_viewport().get_mouse_position()))
-	#if position3D.x < Mapsize.x-1 and position3D.z < Mapsize.y-1 and position3D.x > 0 and position3D.z > 0:
-		#$Trees.set_cell_item(position3D,0,0)
-	$Trees.set_cell_item(Vector3i(18,0,0),0,0)
+	#var dropPlane  = Plane(Vector3(0, 1, 0), 0)
+	#var position3D = dropPlane.intersects_ray(
+	#$"../Camera3D".project_ray_origin(get_viewport().get_mouse_position()),
+	#$"../Camera3D".project_ray_normal(get_viewport().get_mouse_position()))
+	if Input.is_action_pressed("Select"):
+		#print(position3D)
+		Find3DPosFromMouse()
 	UpdateMap()
 	pass
 	
+func Find3DPosFromMouse():
+	var mousePos = get_viewport().get_mouse_position()
+	var rayLength = 1000
+	var from = $"../Camera Container/Camera3D".project_ray_origin(mousePos)
+	var to = from + $"../Camera Container/Camera3D".project_ray_normal(mousePos) * rayLength
+	var space = get_world_3d().direct_space_state
+	var rayQuery = PhysicsRayQueryParameters3D.new()
+	rayQuery.from = from
+	rayQuery.to = to
+	var raycastResults = space.intersect_ray(rayQuery)
+	print(raycastResults)
+	if !raycastResults.is_empty() and PosInMapBounds($Trees.local_to_map(raycastResults["position"])):
+		AddPlant(raycastResults["position"])
+		
+func AddPlant(position3D):
+	var pos = $Trees.local_to_map(position3D)
+	print(pos)
+	var testTree = Node3D.new()
+	testTree.set_script(load("res://Scripts/Characters/Trees/TestTree.gd"))
+	$Trees.set_cell_item(Vector3i(pos.x,0,pos.z),0,0)
+	Tiles[(pos.x * Mapsize.x) + pos.z].plants[7] = testTree
 
-	
+func PosInMapBounds(pos):
+	if pos.x > Mapsize.x-1 or pos.y > Mapsize.y-1 or pos.x < 0 or pos.y < 0:
+		return false
+	else:
+		return true
 func UpdateMap():
 	for i in 128:
 		Tiles[count + i].UpdateTile()
 	count += 128
-	#print(count)
 	if count > 128 * 128 -1:
 		count = 0
 	pass
@@ -63,7 +82,7 @@ func InitTiles():
 			tileToAdd.nutrients = nutrientsToAdd
 			tileToAdd.tilePosition = Vector2i(x,y)
 			tileToAdd.mapRef = get_tree().get_first_node_in_group("MapData2")
-			#tileToAdd._ready()
+			tileToAdd._ready()
 			Tiles.append(tileToAdd)
 
 #inits map with perlin data for height and nutrients
