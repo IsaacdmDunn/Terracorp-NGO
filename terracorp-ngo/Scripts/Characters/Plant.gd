@@ -20,9 +20,9 @@ func Ready() -> void:
 func Update():
 	growthAmount +=10
 	if growthAmount > 250:
-		plantType = PlantType.MedianPlant
-	elif growthAmount > 100:
 		plantType = PlantType.TreePlant
+	elif growthAmount > 100:
+		plantType = PlantType.MedianPlant
 	if growthAmount > 500:
 		fertileAllowed = true
 	health-=1

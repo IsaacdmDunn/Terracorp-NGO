@@ -23,6 +23,10 @@ GameResources="*res://Scripts/Resources/GameResources.gd"
 window/stretch/mode="viewport"
 window/stretch/aspect="expand"
 
+[filesystem]
+
+import/blender/enabled=false
+
 [global_group]
 
 MapData2="mapdata"

@@ -20,6 +20,7 @@ func UpdateTile():
 		if plants[p] != null:
 			
 			if plants[p].fertileAllowed == true: 
+				
 				SpreadPlant()
 			plants[p].Update()
 			UpdatePlant(p)
@@ -33,22 +34,25 @@ func AddPlant(plantLayer: int, plant:Plant):
 	
 #updates plant
 func UpdatePlant(plantID):
+	print(plantID)
+	growIntoNewTile(plantID, plants[plantID].plantType)
 	#grow from small plant to med
-	if plants[plantID].plantType == plants[plantID].PlantType.MedianPlant:
-		if plants[6] == null:
-			plants[6] = plants[plantID]
-			mapRef.get_child(3).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
-			mapRef.get_child(6).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),0,0)
-			KillPlant(plants[plantID], plantID)
-	#grow med plant to large
-	elif plants[plantID].plantType == plants[plantID].PlantType.TreePlant:
-		if plants[7] == null:
-			plants[7] = plants[plantID]
-			mapRef.get_child(6).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
-			mapRef.get_child(9).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),0,0)
-			KillPlant(plants[plantID], plantID)
-	elif plants[plantID].health < 0:
-		KillPlant(plants[plantID],plantID)
+	#if plants[plantID].plantType == plants[plantID].PlantType.MedianPlant:
+		#if plants[3] == null:
+			#plants[3] = plants[plantID]
+			#print("jhvjhvjh")
+			#mapRef.get_child(3).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
+			#mapRef.get_child(7).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),0,0)
+			#KillPlant(plants[plantID], plantID)
+	##grow med plant to large
+	#elif plants[plantID].plantType == plants[plantID].PlantType.TreePlant:
+		#if plants[7] == null:
+			#plants[7] = plants[plantID]
+			#mapRef.get_child(7).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
+			#mapRef.get_child(9).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),0,0)
+			#KillPlant(plants[plantID], plantID)
+	#elif plants[plantID].health < 0:
+		#KillPlant(plants[plantID],plantID) #fix out of bounds bug
 
 #spreads plant when fertile
 func SpreadPlant(): 
@@ -75,5 +79,27 @@ func SpreadPlantToAdjTile(posOffset: Vector2i, plantLayer: int):
 #kills plant
 func KillPlant(plant, plantLayer:int): 
 	plant = null
-	mapRef.get_child(plantLayer - 2).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
+	mapRef.get_child(plantLayer).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
 	plants[plantLayer] = null
+
+func growIntoNewTile(plantID: int, plantType: int):
+	if plantType == 3: #small to med
+		var emptySpaces = []
+		if plants[5] == null:
+			emptySpaces.append(7)
+		if plants[6] == null:
+			emptySpaces.append(8)	
+		if 	!emptySpaces.is_empty():
+			var newLandID = randi_range(0, emptySpaces.size()-1)
+			plants[emptySpaces[newLandID] - 2] = plants[plantID]
+			#print(plantID)
+			mapRef.get_child(plantID).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
+			mapRef.get_child(emptySpaces[newLandID]).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),0,0)
+			KillPlant(plants[plantID], plantID)
+	elif plantType == 4: #med to large
+		if plants[7] == null:
+			plants[7] = plants[plantID]
+			mapRef.get_child(plantID).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
+			mapRef.get_child(9).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),0,0)
+			KillPlant(plants[plantID], plantID)
+	pass
