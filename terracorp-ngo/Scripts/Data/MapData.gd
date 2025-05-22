@@ -34,13 +34,11 @@ func Find3DPosFromMouse():
 	rayQuery.from = from
 	rayQuery.to = to
 	var raycastResults = space.intersect_ray(rayQuery)
-	print(raycastResults)
 	if !raycastResults.is_empty() and PosInMapBounds($Trees.local_to_map(raycastResults["position"])):
 		AddPlant(raycastResults["position"])
 		
 func AddPlant(position3D):
 	var pos = $Trees.local_to_map(position3D)
-	print(pos)
 	var testTree = Node3D.new()
 	testTree.set_script(load("res://Scripts/Characters/Trees/TestTree.gd"))
 	Maps[6].set_cell_item(Vector3i(pos.x,0,pos.z),0,0)
@@ -81,7 +79,7 @@ func InitTiles():
 			var tileToAdd = Tile.new()
 			var nutrientsToAdd = Nutrients.new()
 			tileToAdd.height = randf_range(0,1) #change to perlin
-			for nutrientTypes in Nutrients.NutrientType.size() - 1:
+			for nutrientTypes in Nutrients.NutrientType.size():
 				nutrientsToAdd.SoilNutrients.append(Vector2(nutrientTypes, heightNoise.noise.get_noise_2d(x + (nutrientTypes + 1 * Mapsize.x),y + (nutrientTypes + 1 * Mapsize.y)))) #change to perlin
 			tileToAdd.nutrients = nutrientsToAdd
 			tileToAdd.tilePosition = Vector2i(x,y)

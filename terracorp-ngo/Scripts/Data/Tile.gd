@@ -19,13 +19,21 @@ func UpdateTile():
 	for p in plants.size():
 		if plants[p] != null:
 			
+			if plants[p].nutrientRequirements != null:
+				for nutrient in plants[p].nutrientRequirements.size():
+					if nutrients.SoilNutrients[nutrient].y > plants[p].nutrientRequirements[nutrient].y:
+						plants[p].starving = true
+						break
+					else:
+						plants[p].starving = false
+			
 			if plants[p].fertileAllowed == true: 
 				
 				SpreadPlant()
 			plants[p].Update()
+			
 			UpdatePlant(p)
 			
-	
 
 #adds plant to layer on tile
 func AddPlant(plantLayer: int, plant:Plant):
@@ -34,8 +42,10 @@ func AddPlant(plantLayer: int, plant:Plant):
 	
 #updates plant
 func UpdatePlant(plantID):
-	print(plantID)
-	growIntoNewTile(plantID, plants[plantID].plantType)
+	if plants[plantID].health < 0:
+		KillPlant(plants[plantID],plantID)
+	else:
+		growIntoNewTile(plantID, plants[plantID].plantType)
 	#grow from small plant to med
 	#if plants[plantID].plantType == plants[plantID].PlantType.MedianPlant:
 		#if plants[3] == null:
@@ -51,8 +61,7 @@ func UpdatePlant(plantID):
 			#mapRef.get_child(7).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
 			#mapRef.get_child(9).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),0,0)
 			#KillPlant(plants[plantID], plantID)
-	#elif plants[plantID].health < 0:
-		#KillPlant(plants[plantID],plantID) #fix out of bounds bug
+	 #fix out of bounds bug
 
 #spreads plant when fertile
 func SpreadPlant(): 
@@ -79,7 +88,7 @@ func SpreadPlantToAdjTile(posOffset: Vector2i, plantLayer: int):
 #kills plant
 func KillPlant(plant, plantLayer:int): 
 	plant = null
-	mapRef.get_child(plantLayer).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
+	mapRef.get_child(plantLayer+2).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
 	plants[plantLayer] = null
 
 func growIntoNewTile(plantID: int, plantType: int):
@@ -92,7 +101,6 @@ func growIntoNewTile(plantID: int, plantType: int):
 		if 	!emptySpaces.is_empty():
 			var newLandID = randi_range(0, emptySpaces.size()-1)
 			plants[emptySpaces[newLandID] - 2] = plants[plantID]
-			#print(plantID)
 			mapRef.get_child(plantID).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),-1,0)
 			mapRef.get_child(emptySpaces[newLandID]).set_cell_item(Vector3i(tilePosition.x,0,tilePosition.y),0,0)
 			KillPlant(plants[plantID], plantID)
